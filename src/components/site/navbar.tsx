@@ -220,19 +220,6 @@ export function Navbar() {
       : "text-[#0f172a]"
   );
 
-  const navLinkBase =
-    "rounded-full px-4 py-2 text-sm transition shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--ring)]";
-  const navLinkTone = isDashboard
-    ? "text-foreground/80 hover:bg-foreground/10"
-    : overlayMode
-    ? "border border-white/60 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.95),_rgba(255,255,255,0.7))] text-slate-900 shadow-[0_18px_35px_rgba(15,15,30,0.18)] hover:bg-white"
-    : "text-slate-700 hover:bg-slate-100";
-  const navLinkActive = isDashboard
-    ? "text-foreground"
-    : overlayMode
-    ? "border border-white bg-white text-[#0f172a] shadow-[0_20px_45px_rgba(15,15,30,0.28)]"
-    : "text-[#0f172a]";
-
   const activeLandingSection = isLandingPage
     ? currentHash
       ? currentHash.replace("#", "")
@@ -263,11 +250,12 @@ export function Navbar() {
     window.history.replaceState(null, "", hash);
   };
 
-  const handlePillSelect = (sectionId: LandingSectionId) => {
+  const handlePillSelect = (sectionId: string) => {
+    const validSectionId = sectionId as LandingSectionId;
     if (isLandingPage) {
-      scrollToSection(sectionId);
+      scrollToSection(validSectionId);
     } else {
-      router.push(`/#${sectionId}`);
+      router.push(`/#${validSectionId}`);
     }
   };
 
