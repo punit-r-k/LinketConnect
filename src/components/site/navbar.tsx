@@ -19,6 +19,7 @@ import { cn } from "@/lib/utils";
 import { buildAvatarPublicUrl } from "@/lib/avatar-utils";
 import { brand } from "@/config/brand";
 import { AdaptiveNavPill } from "@/components/ui/3d-adaptive-navigation-bar";
+import { isPublicProfilePathname } from "@/lib/routing";
 
 type UserLite = { id: string; email: string | null } | null;
 
@@ -88,10 +89,15 @@ export function Navbar() {
     };
   }, []);
   const isDashboard = pathname?.startsWith("/dashboard");
+  const isPublicProfile = isPublicProfilePathname(pathname);
   const isPublic = !isDashboard;
   const isLandingPage = pathname === "/";
   const isAuthPage =
     pathname?.startsWith("/auth") || pathname?.startsWith("/forgot-password");
+
+  if (isPublicProfile) {
+    return null;
+  }
 
   useEffect(() => {
     if (!isDashboard) {
@@ -433,12 +439,22 @@ export function Navbar() {
               className="inline-flex items-center gap-2"
               aria-label={`${brand.name} dashboard`}
             >
-              <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-foreground/10 text-lg font-bold text-foreground">
-                {(brand.shortName ?? brand.name).slice(0, 2)}
-              </span>
-              <span className="hidden text-lg font-semibold text-foreground lg:inline">
-                {brand.name}
-              </span>
+              {brand.logo ? (
+                <span className="relative h-15 w-32 overflow-hidden">
+                  <Image
+                    src={brand.logo}
+                    alt={`${brand.name} logo`}
+                    fill
+                    className="object-contain"
+                    sizes="128px"
+                    priority
+                  />
+                </span>
+              ) : (
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-foreground/10 text-lg font-bold text-foreground">
+                  {(brand.shortName ?? brand.name).slice(0, 2)}
+                </span>
+              )}
             </Link>
             <div className="hidden items-center gap-2 rounded-full border border-border/60 bg-card/80 px-2 py-1 lg:flex">
               {DASHBOARD_NAV.map(dashboardLink)}
